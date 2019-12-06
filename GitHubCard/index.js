@@ -9,12 +9,13 @@ axios.get('https://api.github.com/users/stompke')
 .then(response => {
 
   cards.appendChild(CreateCard(response))
+  console.log(response);
 
 
 
 })
 .catch(err => {
-  console.log(`your error is: ${error}`);
+  console.log(`your error is: ${err}`);
 });
 
 /* [✅] Step 2: Inspect and study the data coming back, this is YOUR 
@@ -42,18 +43,49 @@ axios.get('https://api.github.com/users/stompke')
           user, and adding that card to the DOM.
 */
 
-const followersArray = ['twitecki', 'debauchery1st', 'jengopockets', 'KonstadinosAngelis', 'Adammonast'];
 
-followersArray.forEach( item => {
-  axios.get(`https://api.github.com/users/${item}`)
-  .then(response => {
 
-    cards.appendChild(CreateCard(response))
+// const followersArray = ['twitecki', 'debauchery1st', 'jengopockets', 'KonstadinosAngelis', 'Adammonast'];
+let followersArray = [];
+
+
+axios.get('https://api.github.com/users/stompke/following')
+.then(response => {
+ 
+    // const keys = Object.keys(response)
+    // console.log(response)
+    response.data.forEach(item => {
+
+      const userUrl = item.url;
+
+      axios.get(userUrl)
+      .then(response => {
+
+        cards.appendChild(CreateCard(response))
+
+      })
+      .catch(err => {
+        console.log(`your error is: ${err}`);
+      });
+    })
   })
-  .catch(error => {
-    console.log(`Your problem is: ${error}`)
-  })
+ 
+.catch(err => {
+  console.log(`your error is: ${err}`);
 });
+
+
+
+// followersArray.forEach( item => {
+//   axios.get(`https://api.github.com/users/${item}`)
+//   .then(response => {
+
+//     cards.appendChild(CreateCard(response))
+//   })
+//   .catch(error => {
+//     console.log(`Your problem is: ${error}`)
+//   })
+// });
 
 
 
@@ -87,12 +119,21 @@ function CreateCard(gitUserInfo){
     link = document.createElement('p'),
     followers = document.createElement('p'),
     following = document.createElement('p'),
-    bio = document.createElement('p');
+    bio = document.createElement('p'),
+    showMore = document.createElement('button'),
+    blog = document.createElement('p'),
+    company = document.createElement('p'),
+    email =  document.createElement('p'),
+    hiddenFields = document.createElement('div');
   
   card.classList.add('card');
   cardInfo.classList.add('card-info');
   name.classList.add('name');
   username.classList.add('username');
+  showMore.classList.add('show-more');
+
+  hiddenFields.classList.add('hidden');
+ 
 
 
 
@@ -104,6 +145,10 @@ function CreateCard(gitUserInfo){
   followers.textContent = `Followers: ${gitUserInfo.data.followers}`;
   following.textContent = `Following: ${gitUserInfo.data.following}`;
   bio.textContent = `Bio: ${gitUserInfo.data.bio}`;
+  showMore.textContent = 'show more';
+  blog.textContent = `Blog: ${gitUserInfo.data.blog}`;
+  company.textContent = `Company: ${gitUserInfo.data.company}`;
+  email.textContent = `Email: ${gitUserInfo.data.email}`;
 
   card.appendChild(img);
   card.appendChild(cardInfo);
@@ -114,6 +159,16 @@ function CreateCard(gitUserInfo){
   cardInfo.appendChild(followers);
   cardInfo.appendChild(following);
   cardInfo.appendChild(bio);
+  cardInfo.appendChild(hiddenFields);
+  hiddenFields.appendChild(blog);
+  hiddenFields.appendChild(company);
+  hiddenFields.appendChild(email);
+  cardInfo.appendChild(showMore);
+
+  showMore.addEventListener('click', function (){
+    hiddenFields.classList.toggle('hidden');
+  });
+
 
   return card;
 
