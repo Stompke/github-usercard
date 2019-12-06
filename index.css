@@ -92,6 +92,8 @@ body {
 }
 
 .card {
+  display: flex;
+  flex-flow: row wrap;
   width: 100%;
   padding: 20px;
   display: flex;
@@ -124,4 +126,26 @@ body {
 }
 
 
+.show-more {
+    text-align: center;
+    background: blue;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: white;
+    align-items: center;
+}
+.show-more:hover {
+  cursor: pointer;
+  background:lightblue;
+  color: slategrey;
+}
 
+.card-info {
+  display: flex;
+  flex-flow: column;
+  width: 70%;
+}
+
+.hidden {
+  display: none;
+}
